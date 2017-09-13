@@ -2,19 +2,21 @@ FROM openjdk:8-jdk
 
 USER root
 
-RUN apt remove cmdtest
-
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
-RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-
 RUN apt-get update
+RUN apt-get install -y --no-install-recommends curl docker git mercurial iptables php php-curl
 
-RUN apt-get install -y --no-install-recommends curl docker git mercurial iptables php php-curl yarn
-
+# install node
 RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
 RUN apt-get -y install nodejs
 RUN npm install -g n
 RUN n 6.9.2
+
+# install yarn
+RUN apt-get remove cmdtest
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends yarn
 
 RUN mkdir /workspace && \
 	chmod 777 /workspace
