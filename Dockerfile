@@ -27,6 +27,12 @@ RUN git clone https://github.com/phacility/libphutil.git /root/libphutil
 RUN git clone https://github.com/phacility/arcanist.git /root/arcanist
 ENV PATH "/root/arcanist/bin:${PATH}"
 
+# install chrome
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+RUN sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends google-chrome-stable
+
 CMD echo "{\"hosts\": {\"$PHAB_HOST\": {\"token\": \"$PHAB_TOKEN\"}}}" > /root/.arcrc \
 	&& chmod 600 /root/.arcrc \
 	&& java \
