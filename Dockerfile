@@ -31,7 +31,15 @@ ENV PATH "/root/arcanist/bin:${PATH}"
 RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
 RUN sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
 RUN apt-get update
-RUN apt-get install -y --no-install-recommends google-chrome-stable
+RUN apt-get install -y --no-install-recommends google-chrome-stable xvfb unzip
+
+# install chromedriver
+RUN wget -N http://chromedriver.storage.googleapis.com/2.32/chromedriver_linux64.zip
+RUN unzip chromedriver_linux64.zip
+RUN chmod +x chromedriver
+RUN mv -f chromedriver /usr/local/share/chromedriver
+RUN ln -s /usr/local/share/chromedriver /usr/local/bin/chromedriver
+RUN ln -s /usr/local/share/chromedriver /usr/bin/chromedriver
 
 CMD echo "{\"hosts\": {\"$PHAB_HOST\": {\"token\": \"$PHAB_TOKEN\"}}}" > /root/.arcrc \
 	&& chmod 600 /root/.arcrc \
