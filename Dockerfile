@@ -41,6 +41,9 @@ RUN mv -f chromedriver /usr/local/share/chromedriver
 RUN ln -s /usr/local/share/chromedriver /usr/local/bin/chromedriver
 RUN ln -s /usr/local/share/chromedriver /usr/bin/chromedriver
 
+RUN echo 'kernel.unprivileged_userns_clone=1' > /etc/sysctl.d/00-local-userns.conf
+RUN service procps restart
+
 CMD echo "{\"hosts\": {\"$PHAB_HOST\": {\"token\": \"$PHAB_TOKEN\"}}}" > /root/.arcrc \
 	&& chmod 600 /root/.arcrc \
 	&& java \
